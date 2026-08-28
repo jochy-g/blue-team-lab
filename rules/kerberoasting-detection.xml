@@ -1,3 +1,18 @@
+<!--
+  Custom Wazuh rules for Kerberoasting detection (MITRE T1558.003)
+  
+  Developed to address gap in Wazuh 4.9 default detection where
+  individual 4769 events at rule.level <= 3 are filtered below
+  log_alert_level (default: 3), hiding the attack pattern from
+  dashboard.
+  
+  Deploy: append to /var/ossec/etc/rules/local_rules.xml
+  Restart: sudo systemctl restart wazuh-manager
+  
+  Author: Jochy Mendez
+  Date: 2026-08-27
+-->
+
 <group name="windows,kerberos,attack,custom_jochy">
 
   <!-- 100100: Baseline visibility for all 4769 events -->
