@@ -59,4 +59,4 @@ for future SOC work.
 ## Author
 
 Jochy Méndez — Cybersecurity Consultant | Blue Team
-[LinkedIn](https://linkedin.com/in/tu-perfil) — [Contact](mailto:tu@email)
+[LinkedIn](https://www.linkedin.com/in/jochy-antonio-mendez-melendez-334a28186/) — [Contact](mailto:tu@email)
