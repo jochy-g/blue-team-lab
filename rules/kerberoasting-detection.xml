@@ -1,1 +1,36 @@
-ss
+<group name="windows,kerberos,attack,custom_jochy">
+
+  <!-- 100100: Baseline visibility for all 4769 events -->
+  <rule id="100100" level="5">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <description>Kerberos TGS ticket requested (custom baseline)</description>
+    <mitre>
+      <id>T1558</id>
+    </mitre>
+    <group>kerberos,tgs_request,</group>
+  </rule>
+
+  <!-- 100101: Kerberoasting fingerprint (RC4 TGS request) -->
+  <rule id="100101" level="10">
+    <if_sid>100100</if_sid>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>Possible Kerberoasting: RC4-encrypted TGS request for service $(win.eventdata.serviceName)</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,credential_access,</group>
+  </rule>
+
+  <!-- 100102: Kerberoasting burst (10+ TGS in 60s from same user) -->
+  <rule id="100102" level="12" frequency="10" timeframe="60">
+    <if_matched_sid>100100</if_matched_sid>
+    <same_field>win.eventdata.targetUserName</same_field>
+    <description>Kerberoasting attack detected: TGS burst from user $(win.eventdata.targetUserName) - $(rule.frequency) requests in 60s</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,attack_pattern,</group>
+  </rule>
+
+</group>
