@@ -1,4 +1,12 @@
-
+<!--
+  Custom Wazuh rules for bloodhound detection
+  
+  Deploy: append to /var/ossec/etc/rules/local_rules.xml
+  Restart: sudo systemctl restart wazuh-manager
+  
+  Author: Jochy Mendez
+  Date: 2026-08-27
+-->
 <group name="windows,ldap,recon,custom_jochy">
 
   <!-- 100200: Baseline visibility for LDAP directory access -->
