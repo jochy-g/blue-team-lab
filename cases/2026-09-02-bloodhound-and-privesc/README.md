@@ -15,6 +15,9 @@
 - T1078.002 — Valid Accounts: Domain Accounts
 - T1484.001 — Domain Policy Modification (attempted)
 
+<img width="2551" height="1144" alt="image" src="https://github.com/user-attachments/assets/d13d7adb-984a-41e5-bd32-ca3a8b21a796" />
+
+
 ## Phase 1 — Reconnaissance with BloodHound
 
 ### Collection execution
@@ -46,10 +49,12 @@ Windows AD auditing operates in TWO layers:
 
 
 **Layer 1 — auditpol (OS-level):**
-​```
-Directory Service Access             Success (default, insufficient)
-Directory Service Changes            No Auditing
-​```
+
+<img width="774" height="267" alt="image" src="https://github.com/user-attachments/assets/de69723e-b32a-4dd6-9ee9-aeee29e5ed03" />
+
+<img width="1039" height="219" alt="image" src="https://github.com/user-attachments/assets/956062c0-22f4-4ba2-8f36-e5bea2dcfd85" />
+
+
 
 **Layer 2 — SACLs (object-level):**
 Default AD setup has NO SACLs on domain root or high-value objects.
@@ -140,6 +145,12 @@ DELLA_GUERRERO
   → Contains → DOMAIN ADMINS
 ​```
 
+<img width="1971" height="592" alt="image" src="https://github.com/user-attachments/assets/64a053b0-ee45-47e3-8e4b-27ec607904a9" />
+
+<img width="1531" height="1251" alt="image" src="https://github.com/user-attachments/assets/5eef752c-acd3-409b-83b0-15c595684132" />
+
+
+
 **Analysis:** 5 hops from a compromised low-priv user to Domain Admin
 via misconfigured ACLs. No exploits required — only permission abuse.
 
@@ -178,6 +189,11 @@ As DANTE_BARRETT:
 net group "Domain Admins" DANTE_BARRETT /add /domain
 # Result: Access denied
 ​```
+
+<img width="555" height="94" alt="image" src="https://github.com/user-attachments/assets/a0f3c320-0edf-4c28-814a-2106e79f6258" />
+<img width="1222" height="694" alt="image" src="https://github.com/user-attachments/assets/b60b1f77-ee1a-4e4a-a1ef-777c91595f58" />
+
+
 
 ### Analysis of blocked step
 
