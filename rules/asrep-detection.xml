@@ -1,6 +1,17 @@
 <group name="windows,kerberos,asrep,custom_jochy">
 
-  <!--  -->
+  <!--   Custom Wazuh rules for as-rep detection (MITRE T1558.004)
+  
+  Developed to address gap in Wazuh 4.9 default detection where
+  individual 4769 events at rule.level <= 3 are filtered below
+  log_alert_level (default: 3), hiding the attack pattern from
+  dashboard.
+  
+  Deploy: append to /var/ossec/etc/rules/local_rules.xml
+  Restart: sudo systemctl restart wazuh-manager
+  
+  Author: Jochy Mendez
+  Date: 2026-10-12 -->
 
 <rule id="100400" level="5">
   <if_sid>60103,60204</if_sid>
