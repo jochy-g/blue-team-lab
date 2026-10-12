@@ -56,7 +56,8 @@ impacket-GetNPUsers lab.local/ \
 AS-REP tickets for every account with DONT_REQ_PREAUTH set, cryptographically 
 protected by the user's password hash — enabling offline cracking.
 
-![[Pasted image 20261012002554.png]]
+<img width="2491" height="543" alt="image" src="https://github.com/user-attachments/assets/f16937f1-a471-4001-a7cb-7f3d6f5f515a" />
+
 
 ### Phase 3 — Offline cracking demonstration
 
@@ -77,8 +78,17 @@ hashcat -m 18200 easy_crack.txt /usr/share/wordlists/rockyou.txt --force -O -w 1
 
 ​```
 Status...........: Cracked
+​```
+
+​```
 Recovered........: 1/1 (100.00%)
+​```
+
+​```
 Time.Estimated...: 0 secs
+​```
+
+​```
 Progress.........: 4096/14344385 (0.03%)
 ​```
 
@@ -86,7 +96,8 @@ This mirrors real-world risk: legacy service accounts with weak
 passwords and DONT_REQ_PREAUTH flag create instant compromise paths 
 for attackers with zero prior access to the domain.
 
-![[Pasted image 20261012002654.png]]
+<img width="2541" height="202" alt="image" src="https://github.com/user-attachments/assets/55ca1b40-9400-47e9-822e-0699d5d9275a" />
+
 ## Detection engineering
 
 ### Gap identified
@@ -157,7 +168,8 @@ Sample 100402 alert:
 - `agent.name`: DC01
 - `data.win.eventdata.ipAddress`: ::ffff:10.10.10.200 (IPv6-mapped IPv4, Kali attacker)
 
-![[Pasted image 20261012003641.png]]
+<img width="1348" height="595" alt="image" src="https://github.com/user-attachments/assets/a56e4032-842c-42c6-998c-758ee9d75a52" />
+
 ## Hardening recommendations
 
 ### Kerberos configuration
