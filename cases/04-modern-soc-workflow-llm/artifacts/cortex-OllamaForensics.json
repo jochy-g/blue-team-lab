@@ -1,0 +1,39 @@
+```
+{
+  "name": "OllamaForensics",
+  "version": "1.0",
+  "author": "Jochy Mendez",
+  "url": "https://github.com/jochymendez",
+  "license": "AGPL-V3",
+  "description": "Local LLM-based forensic triage using Ollama (Phi-3 Mini)",
+  "dataTypeList": ["ip", "domain", "hash", "url", "mail", "fqdn"],
+  "command": "OllamaForensics/OllamaForensics.py",
+  "dockerImage": "cortexneurons/ollamaforensics:1.0",
+  "baseConfig": "Ollama",
+  "config": {
+    "check_tlp": true,
+    "max_tlp": 3,
+    "check_pap": true,
+    "max_pap": 3
+  },
+  "configurationItems": [
+    {
+      "name": "ollama_url",
+      "description": "Ollama API URL (Docker gateway)",
+      "type": "string",
+      "multi": false,
+      "required": true,
+      "defaultValue": "http://172.18.0.1:11434"
+    },
+    {
+      "name": "model",
+      "description": "Ollama model name",
+      "type": "string",
+      "multi": false,
+      "required": true,
+      "defaultValue": "phi3:mini"
+    }
+  ]
+}
+
+```
