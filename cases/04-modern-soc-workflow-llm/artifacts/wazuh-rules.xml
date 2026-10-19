@@ -1,0 +1,149 @@
+```
+<!-- Blue Team Lab - Custom Detection Rules -->
+<!-- Author: Jochy Mendez -->
+<!-- Case 4: AS-REP Roasting detection (also includes Kerberoasting, BloodHound, Escalation chain) -->
+
+<group name="windows,kerberos,attack,custom_jochy">
+
+  <!-- 100100: Baseline Kerberos TGS requests - Event 4769 -->
+  <rule id="100100" level="5">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <description>Windows: Kerberos TGS requested - Event 4769 (custom baseline for Kerberoasting visibility)</description>
+    <mitre>
+      <id>T1558</id>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberos,tgs_request,</group>
+  </rule>
+
+  <!-- 100101: TGS with RC4 encryption - fingerprint of Kerberoasting -->
+  <rule id="100101" level="10">
+    <if_sid>100100</if_sid>
+    <field name="win.eventdata.ticketEncryptionType">^0x17$</field>
+    <description>Kerberoasting indicator: TGS requested with RC4 (0x17) encryption for user $(win.eventdata.targetUserName)</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,credential_access,</group>
+  </rule>
+
+  <!-- 100102: Kerberoasting burst (10+ TGS in 60s from same user) -->
+  <rule id="100102" level="12" frequency="10" timeframe="60">
+    <if_matched_sid>100100</if_matched_sid>
+    <same_field>win.eventdata.targetUserName</same_field>
+    <description>Kerberoasting attack detected: TGS burst from user $(win.eventdata.targetUserName) - $(rule.frequency) requests in 60s</description>
+    <mitre>
+      <id>T1558.003</id>
+    </mitre>
+    <group>kerberoasting,attack_pattern,</group>
+  </rule>
+
+</group>
+
+<group name="windows,ldap,recon,custom_jochy">
+
+  <!-- 100200: Baseline visibility for LDAP directory access - Event 4662 -->
+  <rule id="100200" level="5">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4662$</field>
+    <description>Windows: LDAP directory access - Event 4662 (custom baseline for AD recon visibility)</description>
+    <mitre>
+      <id>T1087.002</id>
+    </mitre>
+    <group>ldap,directory_access,</group>
+  </rule>
+
+  <!-- 100201: Elevated LDAP queries from single user (BloodHound indicator) -->
+  <rule id="100201" level="10" frequency="50" timeframe="60">
+    <if_matched_sid>100200</if_matched_sid>
+    <same_field>win.eventdata.subjectUserName</same_field>
+    <description>Elevated LDAP recon from user $(win.eventdata.subjectUserName) - possible BloodHound/SharpHound collection</description>
+    <mitre>
+      <id>T1087.002</id>
+    </mitre>
+    <group>ad_recon,discovery,</group>
+  </rule>
+
+  <!-- 100202: Sustained enumeration burst - attack pattern -->
+  <rule id="100202" level="12" frequency="200" timeframe="120">
+    <if_matched_sid>100200</if_matched_sid>
+    <same_field>win.eventdata.subjectUserName</same_field>
+    <description>Sustained AD enumeration attack from user $(win.eventdata.subjectUserName) - possible BloodHound / SharpHound collection</description>
+    <mitre>
+      <id>T1087.002</id>
+      <id>T1069.002</id>
+      <id>T1018</id>
+      <id>T1482</id>
+    </mitre>
+    <group>ad_recon,attack_pattern,discovery,</group>
+  </rule>
+
+</group>
+
+<group name="windows,ad_attack,escalation,custom_jochy">
+
+  <!-- 100300: Password reset event (4738) -->
+  <rule id="100300" level="10">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4738$</field>
+    <description>Account password reset detected for user $(win.eventdata.targetUserName) by $(win.eventdata.subjectUserName)</description>
+    <mitre>
+      <id>T1098</id>
+    </mitre>
+    <group>account_manipulation,credential_access,</group>
+  </rule>
+
+  <!-- 100301: User added to privileged group -->
+  <rule id="100301" level="14">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4728|4732|4756$</field>
+    <description>User added to privileged group by $(win.eventdata.subjectUserName)</description>
+    <mitre>
+      <id>T1098</id>
+      <id>T1484.001</id>
+    </mitre>
+    <group>privilege_escalation,attack_pattern,critical,</group>
+  </rule>
+
+  <!-- 100302: Full escalation chain detected (password reset + priv group add same hour) -->
+  <rule id="100302" level="15" frequency="2" timeframe="3600">
+    <if_matched_sid>100300</if_matched_sid>
+    <if_sid>100301</if_sid>
+    <description>ATTACK CHAIN DETECTED: Password reset followed by privileged group addition within 1 hour - probable AD compromise</description>
+    <mitre>
+      <id>T1484.001</id>
+      <id>T1098</id>
+    </mitre>
+    <group>attack_pattern,critical,domain_compromise,</group>
+  </rule>
+
+</group>
+
+<group name="windows,kerberos,asrep,custom_jochy">
+
+  <!-- 100400: Baseline Kerberos TGT request (Event 4768) -->
+  <rule id="100400" level="5">
+    <if_sid>60103,60204</if_sid>
+    <field name="win.system.eventID">^4768$</field>
+    <description>Windows: Kerberos TGT requested - Event 4768 (custom baseline for AS-REP visibility)</description>
+    <mitre>
+      <id>T1558</id>
+      <id>T1558.004</id>
+    </mitre>
+    <group>kerberos,credential_access,asrep_roasting,</group>
+  </rule>
+
+  <!-- 100402: AS-REP Roasting burst (5+ TGT requests from same IP in 60s) -->
+  <rule id="100402" level="12" frequency="5" timeframe="60">
+   <if_matched_sid>100400</if_matched_sid>
+   <same_field>win.eventdata.ipAddress</same_field>
+   <description>Multiple AS-REP requests detected from same source IP - possible AS-REP Roasting attack</description>
+   <mitre>
+     <id>T1558.004</id>
+   </mitre>
+   <group>asrep_roasting,attack_pattern,</group>
+  </rule>
+
+</group>
+```
