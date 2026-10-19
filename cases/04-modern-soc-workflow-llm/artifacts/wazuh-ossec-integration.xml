@@ -1,0 +1,11 @@
+```
+<!-- Añadir dentro de /var/ossec/etc/ossec.conf, antes de </ossec_config> -->
+<integration>
+  <name>custom-thehive</name>
+  <hook_url>http://10.10.10.60:9000/thehive</hook_url>
+  <api_key>REPLACE_WITH_YOUR_THEHIVE_API_KEY</api_key>
+  <level>10</level>
+  <group>attack_pattern</group>
+  <alert_format>json</alert_format>
+</integration>
+```
