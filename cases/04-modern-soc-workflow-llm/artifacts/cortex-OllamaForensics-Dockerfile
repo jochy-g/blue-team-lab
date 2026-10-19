@@ -1,0 +1,10 @@
+```
+FROM python:3.11-slim
+
+WORKDIR /worker
+COPY . /worker/OllamaForensics
+RUN pip install --no-cache-dir -r /worker/OllamaForensics/requirements.txt
+
+ENTRYPOINT ["python", "/worker/OllamaForensics/OllamaForensics.py"]
+
+```
