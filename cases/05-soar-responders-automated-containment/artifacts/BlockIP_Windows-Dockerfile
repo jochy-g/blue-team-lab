@@ -1,1 +1,7 @@
+FROM python:3.11-slim
 
+WORKDIR /worker
+COPY . /worker/BlockIP_Windows
+RUN pip install --no-cache-dir -r /worker/BlockIP_Windows/requirements.txt
+
+ENTRYPOINT ["python", "/worker/BlockIP_Windows/BlockIP_Windows.py"]
