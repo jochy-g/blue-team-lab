@@ -1,1 +1,29 @@
-
+{
+  "name": "BlockIP_Windows",
+  "version": "1.0",
+  "author": "Jochy Mendez",
+  "url": "https://github.com/jochymendez/blue-team-lab",
+  "license": "AGPL-V3",
+  "description": "Block an IP address at Windows DC firewall via WinRM remote PowerShell",
+  "dataTypeList": ["thehive:case_artifact", "ip"],
+  "command": "BlockIP_Windows/BlockIP_Windows.py",
+  "dockerImage": "cortexneurons/blockip_windows:1.0",
+  "baseConfig": "WindowsResponder",
+  "config": {
+    "check_tlp": true,
+    "max_tlp": 3,
+    "check_pap": true,
+    "max_pap": 3
+  },
+  "configurationItems": [
+    {
+      "name": "dc_host",
+      "description": "DC01 hostname or IP",
+      "type": "string",
+      "multi": false,
+      "required": true,
+      "defaultValue": "10.10.10.10"
+    },
+    {
+      "name": "dc_port",
+      "description": "WinRM port (5985 HTTP, 5986
