@@ -1,1 +1,7 @@
+FROM python:3.11-slim
 
+WORKDIR /worker
+COPY . /worker/DisableUser_AD
+RUN pip install --no-cache-dir -r /worker/DisableUser_AD/requirements.txt
+
+ENTRYPOINT ["python", "/worker/DisableUser_AD/DisableUser_AD.py"]
